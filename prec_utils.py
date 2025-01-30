@@ -197,15 +197,6 @@ def compute_metrics(p: PredictionOutput):
 
     return {"accuracy": accuracy}
 
-'''def compute_metrics(p: PredictionOutput):
-    predictions = p.predictions
-    label_ids = p.label_ids # shape (batch_size, seq_len)
-    pred = np.argmax(predictions[0], axis=-1)
-    num_correct = sum([np.array_equal(pred[i], label_ids[i]) for i in range(len(pred))])
-    accuracy = num_correct / len(pred)
-
-    return {"accuracy": accuracy}'''
-
 
 def transform_dataset(model_type, tokenizer, dataset, max_length):
     if model_type == "CausalLM":
