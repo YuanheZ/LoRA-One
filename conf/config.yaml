@@ -1,13 +1,13 @@
 defaults:
   - _self_
-  - model: t5base
+  - model: llama
 dry_run: False
 wandb:
-  project: "ablation"
+  project: "xxx"
   name: null
-  entity: "yuanhezhang6-university-of-warwick"
+  entity: "xxx"
 hydra:
   sweeper:
     params:
-      ++dataset_name: cola
+      ++dataset_name: meta_math
       ++seed: 42
