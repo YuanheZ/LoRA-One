@@ -161,13 +161,13 @@ def reinit_lora_modules(name, module, init_config, **kwargs):
         named_grad = kwargs["named_grads"]
         grad_name = ".".join(name.split(".")[2:]) + ".weight"
         grads = named_grad[grad_name]
-        if init_config.direction == "OS-LoRA-Full":
+        if init_config.direction == "Spectral-Init":
             U, S, V = torch.svd_lowrank(-grads.cuda().float(), q=4 * lora_r, niter=4)
             V = V.T
         else:
             U, S, V = torch.svd_lowrank(grads.cuda().float(), q=4 * lora_r, niter=4)
             V = V.T
-        if init_config.direction == "OS-LoRA-Full":
+        if init_config.direction == "Spectral-Init":
             # change scale if needed
             B = 0.1 * U[:, :lora_r] @ torch.diag(torch.sqrt(S[:lora_r]))
             A = 0.1 * torch.diag(torch.sqrt(S[:lora_r])) @ V[:lora_r, :]
@@ -217,7 +217,7 @@ def reinit_lora_modules(name, module, init_config, **kwargs):
             module.lora_B.default.weight.data = module.lora_B.default.weight.data.to(
                 torch.float32
             )
-        if init_config.direction == "OS-LoRA-Full":
+        if init_config.direction == "Spectral-Init":
             pass
         else:
             # If lora_A@lora_B is not zero, then we need to subtract lora_A@lora_B from the original weight matrix
