@@ -161,27 +161,20 @@ def reinit_lora_modules(name, module, init_config, **kwargs):
         named_grad = kwargs["named_grads"]
         grad_name = ".".join(name.split(".")[2:]) + ".weight"
         grads = named_grad[grad_name]
-        U, S, V = torch.svd_lowrank(-grads.cuda().float(), q=4 * lora_r, niter=4)
-        V = V.T
-        if init_config.direction == "OS-LoRA-Full-AN":
-            if S[0] >= 1.:
-                print('Normalization', S[0])
-                B = U[:, :lora_r] @ torch.diag(torch.sqrt(S[:lora_r])) / torch.sqrt(S[0])
-                A = torch.diag(torch.sqrt(S[:lora_r])) @ V[:lora_r, :] / torch.sqrt(S[0])
-            else:
-                print('N0 normalization')
-                B = U[:, :lora_r] @ torch.diag(torch.sqrt(S[:lora_r]))
-                A = torch.diag(torch.sqrt(S[:lora_r])) @ V[:lora_r, :]
-        elif init_config.direction == "OS-LoRA-Full-N":
-            B = U[:, :lora_r] @ torch.diag(torch.sqrt(S[:lora_r])) / torch.sqrt(S[0])
-            A = torch.diag(torch.sqrt(S[:lora_r])) @ V[:lora_r, :] / torch.sqrt(S[0])
-        elif init_config.direction == "OS-LoRA-Full":
-            B = U[:, :lora_r] @ torch.diag(torch.sqrt(S[:lora_r]))
-            A = torch.diag(torch.sqrt(S[:lora_r])) @ V[:lora_r, :]
+        if init_config.direction == "OS-LoRA-Full":
+            U, S, V = torch.svd_lowrank(-grads.cuda().float(), q=4 * lora_r, niter=4)
+            V = V.T
+        else:
+            U, S, V = torch.svd_lowrank(grads.cuda().float(), q=4 * lora_r, niter=4)
+            V = V.T
+        if init_config.direction == "OS-LoRA-Full":
+            # change scale if needed
+            B = 0.1 * U[:, :lora_r] @ torch.diag(torch.sqrt(S[:lora_r]))
+            A = 0.1 * torch.diag(torch.sqrt(S[:lora_r])) @ V[:lora_r, :]
         elif init_config.direction == "LoRA-GA":
             B = U[:, lora_r : 2 * lora_r]
             A = V[:lora_r, :]
-        elif init_config.direction == "OS-LoRA":
+        elif init_config.direction == "LoRA-One":
             B = U[:, :lora_r]
             A = V[:lora_r, :]
         scaling_factor = module.scaling["default"]
@@ -224,26 +217,29 @@ def reinit_lora_modules(name, module, init_config, **kwargs):
             module.lora_B.default.weight.data = module.lora_B.default.weight.data.to(
                 torch.float32
             )
-        # If lora_A@lora_B is not zero, then we need to subtract lora_A@lora_B from the original weight matrix
-        '''offset = (module.lora_B.default.weight @ module.lora_A.default.weight).to(
-            module.weight.data.device
-        )
-        scaling_factor = module.scaling["default"]
-        offset *= scaling_factor
-        if "norm_clip" in init_config and init_config.norm_clip:
-            # for numerical stability, offset's largest value must be less then weight's largest value
-            ratio = torch.max(torch.abs(module.weight.data)) / torch.max(
-                torch.abs(offset)
+        if init_config.direction == "OS-LoRA-Full":
+            pass
+        else:
+            # If lora_A@lora_B is not zero, then we need to subtract lora_A@lora_B from the original weight matrix
+            offset = (module.lora_B.default.weight @ module.lora_A.default.weight).to(
+                module.weight.data.device
             )
-            if ratio < 1:
-                offset *= ratio
-                module.lora_A.default.weight.data *= ratio**0.5
-                module.lora_B.default.weight.data *= ratio**0.5
-                log.warning(f"Clipping offset by {ratio}")
-        try:
-            module.weight.data -= offset
-        except:
-            breakpoint()'''
+            scaling_factor = module.scaling["default"]
+            offset *= scaling_factor
+            if "norm_clip" in init_config and init_config.norm_clip:
+                # for numerical stability, offset's largest value must be less then weight's largest value
+                ratio = torch.max(torch.abs(module.weight.data)) / torch.max(
+                    torch.abs(offset)
+                )
+                if ratio < 1:
+                    offset *= ratio
+                    module.lora_A.default.weight.data *= ratio**0.5
+                    module.lora_B.default.weight.data *= ratio**0.5
+                    log.warning(f"Clipping offset by {ratio}")
+            try:
+                module.weight.data -= offset
+            except:
+                breakpoint()
 
 
 def reinit_lora(model, init_config, **kwargs):
