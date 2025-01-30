@@ -28,6 +28,7 @@ from peft.tuners.lora.layer import Linear as LoraLinear
 include_keywords = ["layers.27", "layers.6"]  # for Llama
 do_log = False
 
+# https://github.com/pilancilab/Riemannian_Preconditioned_LoRA.git
 class AdamWr(Optimizer):
     def __init__(self, params, lr=1e-3, betas=(0.9, 0.999), eps=1e-8, correct_bias=False, optimizer_reg=1e-6):
         defaults = dict(lr=lr, betas=betas, eps=eps, correct_bias=correct_bias)
