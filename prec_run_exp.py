@@ -168,9 +168,11 @@ def reinit_lora_modules(name, module, init_config, **kwargs):
             U, S, V = torch.svd_lowrank(grads.cuda().float(), q=4 * lora_r, niter=4)
             V = V.T
         if init_config.direction == "Spectral-Init":
-            # change scale if needed
-            B = 0.1 * U[:, :lora_r] @ torch.diag(torch.sqrt(S[:lora_r]))
-            A = 0.1 * torch.diag(torch.sqrt(S[:lora_r])) @ V[:lora_r, :]
+            # scaling parameter for spectral (-): spec_gamma
+            # use unit scale in config when training with spectral (-)
+            gamma = torch.tensor(init_config.spec_gamma)
+            B = torch.sqrt(gamma) * U[:, :lora_r] @ torch.diag(torch.sqrt(S[:lora_r]))
+            A = torch.sqrt(gamma) * torch.diag(torch.sqrt(S[:lora_r])) @ V[:lora_r, :]
         elif init_config.direction == "LoRA-GA":
             B = U[:, lora_r : 2 * lora_r]
             A = V[:lora_r, :]
