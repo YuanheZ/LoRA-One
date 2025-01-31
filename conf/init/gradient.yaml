@@ -1,7 +1,7 @@
 mode: gradient
 bsz: 1
 iters: 8
-direction: LoRA-GA
+direction: LoRA-One
 max_length: 1024
 dtype: fp32
 scale: stable
