@@ -158,6 +158,7 @@ def reinit_lora_modules(name, module, init_config, **kwargs):
                 (V[:lora_r, :].T * torch.sqrt(S[:lora_r])/torch.sqrt(S_sum)*lora_r**0.5).T.contiguous()
             )
     elif init_config.mode == "gradient":
+        # modified from https://github.com/Outsider565/LoRA-GA
         named_grad = kwargs["named_grads"]
         grad_name = ".".join(name.split(".")[2:]) + ".weight"
         grads = named_grad[grad_name]
