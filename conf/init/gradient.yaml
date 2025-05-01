@@ -1,9 +1,10 @@
 mode: gradient
 bsz: 1
 iters: 8
-direction: LoRA-One
+direction: OS-LoRA
 max_length: 1024
 dtype: fp32
 scale: stable
 stable_gamma: 16
-spec_gamma: 0.01
+do_subsampling: false
+sub_size: 100000
