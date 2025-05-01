@@ -19,16 +19,44 @@ For each weight matrix, we first compute the full-batch gradient $\nabla_{W} L$ 
 ```math
 \mathbf{A}_{0}=\frac{1}{\sqrt{\gamma}} U_{[:,:r]} Diag(S[:r])\,,\quad \mathbf{B}_{0}=\frac{1}{\sqrt{\gamma}} Diag(S[:r]) V_{[:,:r]}^\top\,,\quad W_{adapted} = W_{pre}+\frac{\alpha}{\sqrt{r}}\mathbf{A}_{0} \mathbf{B}_{0}\,,
 ```
-which is equivalent to perform one best r-rank full-batch gradient descent under full fine-tuning at the initialization. The pre-conditioners are modified from [Scale-Adam](https://github.com/pilancilab/Riemannian_Preconditioned_LoRA.git).
+which is equivalent to perform one best r-rank full-batch gradient descent under full fine-tuning with learning rate $\frac{\alpha}{\gamma\sqrt{r}}$ at the initialization. The pre-conditioners are modified from [Scale-Adam](https://github.com/pilancilab/Riemannian_Preconditioned_LoRA.git).
 
 ---
+### Quick Start
 
-To use LoRA-One without pre-conditioners, please use the following script
+Specific config parameters:
 ```
-srun python run_exp.py -m ++dataset_name=meta_math +init=gradient ++peft.lora_r=8 +peft=all wandb.name="enter-name-here" ++init.weight="stable" peft.use_rslora=True peft.lora_alpha=16 ++init.stable_gamma=64 model.learning_rate=2e-5 ++seed=0 ++init.direction="LoRA-One"
+model:
+  bf16: true # set true if needed
+  max_length: 1024 # input max length for training
+  prec_reg: 1.0e-06 # adjust for pre-conditioners
+  saving: false # if true, the model will merge adapters then save after training
+init:
+  mode: gradient
+  direction: LoRA-One
+  max_length: 1024 # input max lenght using for computing full-batch gradient, recomment to be consistent with max_length in model
+  scale: stable
+  stable_gamma: 128 # gamma parameter in the init
+  do_subsampling: false # set true to enable using a sub-batch data to initialize
+  sub_size: 100000 # specify the size if using sub-batch data
 ```
 
-The small-scale experiments can be found in
+To use LoRA-One **without** pre-conditioners, please use the following slurm command
+```
+srun python run_exp.py -m ++dataset_name=meta_math model.epochs=1 model.eval_epochs=1 ++model.saving=true +init=gradient ++peft.lora_r=8 +peft=all wandb.name="enter-name-here" ++init.weight="stable" peft.use_rslora=True peft.lora_alpha=16 ++init.stable_gamma=128 model.learning_rate=2e-4 ++seed=9 ++init.direction="LoRA-One"
+```
+
+For multi-GPU training, please use the following slurm command (2 GPUs example)
+```
+CUDA_VISIBLE_DEVICES="0,1" python -m accelerate.commands.launch \
+--main_process_port $(shuf -i 10000-60000 -n 1) \
+--config_file accelerate_config.yaml \
+run_exp.py -m model.epochs=3 model.eval_epochs=3 ++model.saving=false model.real_batch_size=16 ++dataset_name=commonsense_reasoning +init=gradient ++init.direction="LoRA-One" ++init.max_length=256 ++model.max_length=256 ++peft.lora_r=16 +peft=qv wandb.name="enter-name-here" ++init.scale="stable" peft.use_rslora=True peft.lora_alpha=16 ++peft.lora_dropout=0.05 ++init.stable_gamma=128 model.learning_rate=5e-5 ++seed=42
+```
+
+The code for LoRA-One **with** pre-conditioners is under revision. We will release once done.
+
+The small-scale (toy) experiments can be found in
 ```
 Toy_Experiments.ipynb
 ```
