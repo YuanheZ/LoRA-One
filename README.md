@@ -60,6 +60,18 @@ The small-scale (toy) experiments can be found in
 ```
 Toy_Experiments.ipynb
 ```
+---
+### Evaluation
+To evaluate fine-tuned model on GSM8K by Greedy decoding (recommended for math task), please use the following slurm command:
+```
+srun python eval_gsm8k.py --model_name="merged_model_path" --wandb_name="enter-name-here"
+```
+If you want to use top_p sampling instead, please use the following slurm command:
+```
+srun python eval_gsm8k.py --model_name="merged_model_path" --wandb_name="enter-name-here" --temperature=xxx ---top_p=xxx
+```
+
+---
 
 ## Citation
 
