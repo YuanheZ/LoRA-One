@@ -17,3 +17,16 @@ The small-scale experiments can be found in
 ```
 Toy_Experiments.ipynb
 ```
+
+## Citation
+
+If this work is relevant to your research, please cite:
+
+```bibtex
+@article{zhang2025one,
+  title={One-step full gradient suffices for low-rank fine-tuning, provably and efficiently},
+  author={Zhang, Yuanhe and Liu, Fanghui and Chen, Yudong},
+  journal={arXiv preprint arXiv:2502.01235},
+  year={2025}
+}
+```
