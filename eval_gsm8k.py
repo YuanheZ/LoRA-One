@@ -24,8 +24,8 @@ def extract_num(text):
 
 def main(model_name, wandb_name, temperature=None, top_p=None):
     wandb.init(
-        entity="yuanhezhang6-university-of-warwick",
-        project="llama_eval_gsm8k_new",
+        entity="xxx",
+        project="llama_eval_gsm8k",
         name=wandb_name
     )
     _, _, test_set = load_gsm8k()
