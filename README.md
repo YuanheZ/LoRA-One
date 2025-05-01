@@ -1,4 +1,6 @@
-*LoRA-One*
+# LoRA-One: One-step full gradient suffices for low-rank fine-tuning, provably and efficiently.
+(Accepted by ICML 2025 as Spotlight, 2.6% acceptance rate)
+---
 
 To use LoRA-One, please use the following script
 ```
