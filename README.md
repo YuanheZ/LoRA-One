@@ -1,5 +1,5 @@
 <h1 align="center">
-    <p> LoRA-One: one-step full gradient suffices for low-rank fine-tuning, provably and efficiently <br> [ICML2025 (Spotlight)]</p>
+    <p> LoRA-One: <br> one-step full gradient suffices for low-rank fine-tuning, provably and efficiently <br> [ICML2025 (Spotlight)]</p>
 </h1>
 
 <h1 align="center"> 
