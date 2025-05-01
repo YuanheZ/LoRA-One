@@ -3,6 +3,7 @@ from fire import Fire
 from tqdm import trange, tqdm
 from utils import initialize_text_to_text_model, model_inference
 import re
+import os
 
 ALPACA_PREFIX_TEMPLATE_MD = """Below is an instruction that describes a task.\n Write a response that appropriately completes the request.
 
@@ -62,20 +63,28 @@ def generate_one_completion(model, tokenizer, model_type, prompt, template=True)
     post_pred = post_process(pred_text)
     return post_pred
 
-def main(model_name):
+def main(model_name, num_sample=1):
+    best_temperature = {1: 0.1, 10: 0.6, 100: 0.8}
     problems = read_problems()
     model_type = "CausalLM"
     model, tokenizer = initialize_text_to_text_model(
         model_name, model_type, True, tokenizer="meta-llama/Llama-2-7b-hf",flash_attention=True
     )
-    num_samples_per_task = 5
+    #model.generation_config.temperature = best_temperature[num_sample]
+    #model.generation_config.top_p = 0.95
+    model.generation_config.temperature = None
+    model.generation_config.top_p = None
+    model.generation_config.do_sample = False
     samples = [
         dict(task_id=task_id, completion=generate_one_completion(model, tokenizer, model_type, problems[task_id]["prompt"]))
         for task_id in tqdm(problems, desc="Tasks")
-        for _ in range(num_samples_per_task)
+        for _ in range(num_sample)
     ]
-    target_name = f"{model_name.replace('/', '_')}_humaneval_samples.jsonl"
+    target_name = os.path.join("humaneval_samples", f"{model_name.replace('/', '_')}_nsamples{num_sample}_humaneval_samples.jsonl")
     write_jsonl(target_name, samples)
+
+if __name__ == "__main__":
+    Fire(main)
     
 if __name__ == "__main__":
     Fire(main)
