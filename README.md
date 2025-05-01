@@ -110,6 +110,10 @@ srun python eval_mmlu.py "merged_model_path"
 ```
 
 ---
+## Acknowledgement
+We greatly appreciate two remarkable repositories: [LoRA-GA](https://github.com/Outsider565/LoRA-GA.git), [Prec-LoRA](https://github.com/pilancilab/Riemannian_Preconditioned_LoRA.git).
+
+---
 
 ## Citation
 
