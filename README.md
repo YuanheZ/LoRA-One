@@ -73,6 +73,14 @@ If you want to use top_p sampling instead, please use the following slurm comman
 srun python eval_gsm8k.py --model_name="merged_model_path" --wandb_name="enter-name-here" --temperature=xxx ---top_p=xxx
 ```
 
+Furthermore, to evaluate Few-shot CoT accuracy, we recommend to use [lm-evaluation-harness](https://github.com/EleutherAI/lm-evaluation-harness.git) (Install instruction can be found in their github page). Please use the following slurm command (for 8-shot cot):
+```
+lm_eval --model hf \
+    --model_args pretrained=merged_model_path \
+    --tasks gsm8k_cot \
+    --batch_size auto
+```
+
 #### Code
 First, generate $n$ sample using the following slurm command:
 ```
@@ -93,6 +101,12 @@ srun python commonsense_evaluate.py \
     --base_model merged_model_path \
     --name enter-name-here \
     --batch_size 1
+```
+
+#### Instruction-Tuning
+To evaluate on MMLU, please use the following slurm command:
+```
+srun python eval_mmlu.py "merged_model_path"
 ```
 
 ---
