@@ -164,31 +164,16 @@ def reinit_lora_modules(name, module, init_config, peft_conf, **kwargs):
         named_grad = kwargs["named_grads"]
         grad_name = ".".join(name.split(".")[2:]) + ".weight"
         grads = named_grad[grad_name]
-        if init_config.direction == "OS-LoRA-Full-N":
+        if init_config.direction == "LoRA-One":
             U, S, V = torch.svd_lowrank(-grads.cuda().float(), q=512, niter=16) # q: estimated rank niter: iterations
         else:
             U, S, V = torch.svd_lowrank(grads.cuda().float(), q=4 * lora_r, niter=4)
         V = V.T
-        if init_config.direction == "OS-LoRA-Full-AN":
-            if S[0] >= 1.:
-                print('Normalization', S[0])
-                B = U[:, :lora_r] @ torch.diag(torch.sqrt(S[:lora_r])) / torch.sqrt(S[0])
-                A = torch.diag(torch.sqrt(S[:lora_r])) @ V[:lora_r, :] / torch.sqrt(S[0])
-            else:
-                print('N0 normalization')
-                B = U[:, :lora_r] @ torch.diag(torch.sqrt(S[:lora_r]))
-                A = torch.diag(torch.sqrt(S[:lora_r])) @ V[:lora_r, :]
-        elif init_config.direction == "OS-LoRA-Full-N":
+        elif init_config.direction == "LoRA-One":
             B = U[:, :lora_r] @ torch.diag(torch.sqrt(S[:lora_r])) / torch.sqrt(S[0])
             A = torch.diag(torch.sqrt(S[:lora_r])) @ V[:lora_r, :] / torch.sqrt(S[0])
-        elif init_config.direction == "OS-LoRA-A":
-            B = torch.zeros_like(U[:, :lora_r])
-            A = V[:lora_r, :]
         elif init_config.direction == "LoRA-GA":
             B = U[:, lora_r : 2 * lora_r]
-            A = V[:lora_r, :]
-        elif init_config.direction == "OS-LoRA":
-            B = U[:, :lora_r]
             A = V[:lora_r, :]
         scaling_factor = module.scaling["default"]
         if init_config.scale == "gd":
@@ -198,7 +183,7 @@ def reinit_lora_modules(name, module, init_config, peft_conf, **kwargs):
             # Because A,B is orthogonal, do not need to scale
             pass
         elif init_config.scale == "stable":
-          if init_config.direction == "OS-LoRA-Full-N":
+          if init_config.direction == "LoRA-One":
             gamma = init_config.stable_gamma
             B = B / gamma**0.5
             A = A / gamma**0.5
@@ -259,7 +244,7 @@ def reinit_lora_modules(name, module, init_config, peft_conf, **kwargs):
                 )
 
         # If lora_A@lora_B is not zero, then we need to subtract lora_A@lora_B from the original weight matrix
-        if init_config.direction == "OS-LoRA-Full-N":
+        if init_config.direction == "LoRA-One":
           pass
         else:
           offset = (module.lora_B.default.weight @ module.lora_A.default.weight).to(
@@ -577,7 +562,7 @@ def run_exp(cfg: DictConfig):
             "param_ratio": trainable_params / orig_model_params,
         }
         if cfg.init.mode == "gradient":
-            if cfg.init.direction != "OS-LoRA-Full-N":
+            if cfg.init.direction != "LoRA-One":
               save_dir = os.path.join(
                   "results", f"{cfg.wandb.project}/{name}/{cfg.seed}", "orig_checkpoint"
               )
