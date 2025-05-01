@@ -1,9 +1,10 @@
 use_peft: true
 lora_r: null
 lora_relative_r: null
-lora_target_modules: [q,v]
+lora_target_modules: ["q_proj", "k_proj", "v_proj", "up_proj", "down_proj"]
 train_embeddings: false
 use_rslora: false
 use_loraplus: false
 loraplus_lr_ratio: 16
 lora_alpha: 16
+lora_dropout: 0.0
