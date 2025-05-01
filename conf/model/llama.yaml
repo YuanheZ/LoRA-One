@@ -9,3 +9,6 @@ early_stopping_patience: 3
 max_length: 1024
 logging_steps: 1
 learning_rate: 2e-5
+weight_decay: 0.0
+prec_reg: 1e-6
+saving: true
