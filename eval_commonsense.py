@@ -96,7 +96,7 @@ def main():
     create_dir('comm_eval/')
 
     wandb.init(
-        entity="yuanhezhang6-university-of-warwick",
+        entity="xxx",
         project="comm_eval",
         name=args.name
     )
