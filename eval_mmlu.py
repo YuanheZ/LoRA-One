@@ -173,6 +173,7 @@ def evaluate(ntrain, subject, model, tokenizer, dev_df, test_df):
 
 def main(model_path, ntrain: int = 5, data_dir = 'data'):
     model, tokenizer = initialize_text_to_text_model(model_path, "CausalLM", True, flash_attention=True)
+    model.generation_config.do_sample=False
     model.eval()
     subjects = sorted(
         [
