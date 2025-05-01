@@ -3,7 +3,7 @@
 </h1>
 
 <h1 align="center"> 
-    <img src="./img/lora-one-llama.png" width="100">
+    <img src="./img/lora-one-llama.png" width="300">
 </h1>
 
 The Official PyTorch implementation of [**LoRA-One: One-step full gradient suffices for low-rank fine-tuning, provably and efficiently**](https://arxiv.org/abs/2502.01235) [ICML2025 (Spotlight, acceptance rate: ***2.6%***)].
