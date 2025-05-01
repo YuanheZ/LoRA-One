@@ -83,6 +83,18 @@ Next, git-clone [human-eval](https://github.com/openai/human-eval.git) and get P
 srun python evaluate_functional_correctness.py --sample_file="generated_samples_path" --k=1
 ```
 
+#### Commonsense Reasoning
+Notice that, due to the max_length was restricted to 256 according to the prior works e.t.c. [LLM-Adapters](https://github.com/AGI-Edgerunners/LLM-Adapters.git), [DoRA](https://github.com/NVlabs/DoRA.git), the trained model likelihood becomes sharp which brought instability to generation under their gen configs. We utilize the generation by integrating previous top_p sampling and beam-search decoding, which solves this issue and raise the accuracy.
+
+To evaluate on datasets {"boolq" "piqa" "social_i_qa" "hellaswag" "winogrande" "ARC-Challenge" "ARC-Easy" "openbookqa"}, please use the following slurm command:
+```
+srun python commonsense_evaluate.py \
+    --dataset {dataset_name} \
+    --base_model merged_model_path \
+    --name enter-name-here \
+    --batch_size 1
+```
+
 ---
 
 ## Citation
