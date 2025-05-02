@@ -12,7 +12,7 @@ The Official PyTorch implementation of [**LoRA-One: one-step full gradient suffi
 
 This paper studies how to improve the performance of Low-Rank Adaption (LoRA) as guided by our theoretical analysis. Our first set of theoretical results show that for linear models: (i) under random initialization, LoRA will align to the certain singular subspace of one-step gradient of full fine-tuning; (ii) preconditioners improve convergence in the high-rank case. These insights motivate us to focus on preconditioned LoRA using a specific spectral initialization strategy for aligning with certain subspaces. For both linear and nonlinear models, we prove that alignment and generalization guarantees can be directly achieved at initialization, and the subsequent linear convergence can be also built. Our analysis leads to the ***LoRA-One*** algorithm (using One-step gradient and preconditioning), a theoretically grounded algorithm that achieves significant empirical improvement over vanilla LoRA and its variants on several benchmarks.
 <h1 align="center"> 
-    <img src="./img/accuracy_vs_epoch-1.png" width="400">
+    <img src="./img/accuracy_vs_epoch-1.png" width="600">
 </h1>
 
 ---
