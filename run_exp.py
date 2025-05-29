@@ -169,7 +169,7 @@ def reinit_lora_modules(name, module, init_config, peft_conf, **kwargs):
         else:
             U, S, V = torch.svd_lowrank(grads.cuda().float(), q=4 * lora_r, niter=4)
         V = V.T
-        elif init_config.direction == "LoRA-One":
+        if init_config.direction == "LoRA-One":
             B = U[:, :lora_r] @ torch.diag(torch.sqrt(S[:lora_r])) / torch.sqrt(S[0])
             A = torch.diag(torch.sqrt(S[:lora_r])) @ V[:lora_r, :] / torch.sqrt(S[0])
         elif init_config.direction == "LoRA-GA":
