@@ -165,9 +165,9 @@ def reinit_lora_modules(name, module, init_config, peft_conf, **kwargs):
         grad_name = ".".join(name.split(".")[2:]) + ".weight"
         grads = named_grad[grad_name]
         if init_config.direction == "LoRA-One":
-            U, S, V = torch.svd_lowrank(-grads.cuda().float(), q=512, niter=16) # q: estimated rank niter: iterations
+            U, S, V = torch.svd_lowrank(-grads.cuda().float(), q=512, niter=16)
         else:
-            U, S, V = torch.svd_lowrank(grads.cuda().float(), q=4 * lora_r, niter=4)
+            U, S, V = torch.svd_lowrank(grads.cuda().float(), q=512, niter=16)
         V = V.T
         if init_config.direction == "LoRA-One":
             B = U[:, :lora_r] @ torch.diag(torch.sqrt(S[:lora_r])) / torch.sqrt(S[0])
