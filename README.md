@@ -1,12 +1,12 @@
 <h1 align="center">
-    <p> LoRA-One: <br> one-step full gradient suffices for low-rank fine-tuning, <br> provably and efficiently <br> [ICML2025 (Spotlight)]</p>
+    <p> LoRA-One: <br> One-Step Full Gradient Could Suffice for Fine-Tuning Large Language Models, <br> Provably and Efficiently <br> [ICML2025 Oral]</p>
 </h1>
 
 <h1 align="center"> 
     <img src="./img/lora-one-llama.png" width="300">
 </h1>
 
-The Official PyTorch implementation of [**LoRA-One: one-step full gradient suffices for low-rank fine-tuning, provably and efficiently**](https://arxiv.org/abs/2502.01235) [ICML2025 Oral].
+The Official PyTorch implementation of [**LoRA-One: One-Step Full Gradient Could Suffice for Fine-Tuning Large Language Models, Provably and Efficiently**](https://arxiv.org/abs/2502.01235).
 
 ### Content Overview
 
