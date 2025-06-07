@@ -1,5 +1,5 @@
 <h1 align="center">
-    <p> LoRA-One: <br> One-Step Full Gradient <br> Could Suffice for Fine-Tuning Large Language Models, <br> Provably and Efficiently <br> [ICML2025 Oral]</p>
+    <p> LoRA-One: <br> One-Step Full Gradient Could Suffice for Fine-Tuning LLMs, <br> Provably and Efficiently <br> [ICML2025 Oral]</p>
 </h1>
 
 <h1 align="center"> 
