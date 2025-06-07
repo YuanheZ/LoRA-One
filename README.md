@@ -18,7 +18,7 @@ For each weight matrix, we first compute the full-batch gradient $\nabla_{W} L$ 
 ```math
 \mathbf{A}_{0}=\frac{1}{\sqrt{\gamma}} U_{[:,:r]} Diag(S[:r])\,,\quad \mathbf{B}_{0}=\frac{1}{\sqrt{\gamma}} Diag(S[:r]) V_{[:,:r]}^\top\,,\quad W_{adapted} = W_{pre}+\frac{\alpha}{\sqrt{r}}\mathbf{A}_{0} \mathbf{B}_{0}\,,
 ```
-which is equivalent to perform one best r-rank full-batch gradient descent under full fine-tuning with learning rate $\frac{\alpha}{\gamma\sqrt{r}}$ at the initialization. The pre-conditioners are modified from [Scale-Adam](https://github.com/pilancilab/Riemannian_Preconditioned_LoRA.git).
+which is equivalent to perform one best r-rank full-batch gradient descent under full fine-tuning with learning rate $\frac{\alpha}{\gamma\sqrt{r}}$ at the initialization. The pre-conditioners (if needed) are modified from [Scaled-Adam](https://github.com/pilancilab/Riemannian_Preconditioned_LoRA.git).
 
 ---
 ### Quick Start
