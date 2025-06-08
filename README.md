@@ -51,10 +51,6 @@ run_exp.py -m model.epochs=3 model.eval_epochs=3 ++model.saving=false model.real
 
 The code for LoRA-One **with** pre-conditioners is under revision. We will release once done.
 
-The small-scale (toy) experiments can be found in
-```
-Toy_Experiments.ipynb
-```
 ---
 ### Evaluation
 
