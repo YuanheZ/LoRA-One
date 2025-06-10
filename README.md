@@ -100,6 +100,7 @@ To evaluate on MMLU, please use the following slurm command:
 ```
 srun python eval_mmlu.py "merged_model_path"
 ```
+We remark that LoRA-One can work very well using only a small sampled batch (8~64) to compute the one-step full gradient for initialization.
 
 ---
 ## Acknowledgement
