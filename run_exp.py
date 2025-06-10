@@ -451,22 +451,10 @@ def run_exp(cfg: DictConfig):
 
     additional_kwargs = {} #generate empty args
     if use_peft and cfg.init.mode == "gradient":
-        #subsampling for ablation study
-        if not cfg.init.do_subsampling:
-            log.info("Using full-batch gradient:")
-            if isinstance(train_set, list):
-                temp_set = train_set[: cfg.init.bsz * cfg.init.iters]
-            else:
-                temp_set = train_set.select(range(cfg.init.bsz * cfg.init.iters))
+        if isinstance(train_set, list):
+            temp_set = train_set[: cfg.init.bsz * cfg.init.iters]
         else:
-            train_split = train_set.train_test_split(test_size=cfg.init.sub_size, shuffle=True, seed=42)
-            subset = train_split["test"]
-            log.info("Using sub-batch gradient:")
-            print(subset)
-            if isinstance(subset, list):
-                temp_set = subset[: cfg.init.bsz * cfg.init.iters]
-            else:
-                temp_set = subset.select(range(cfg.init.bsz * cfg.init.iters))
+            temp_set = train_set.select(range(cfg.init.bsz * cfg.init.iters))
 
         transform_dataset(
             model_type=model_type,
