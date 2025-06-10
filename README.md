@@ -4,7 +4,7 @@ The Official PyTorch implementation of [**LoRA-One: One-Step Full Gradient Could
 
 This paper explores how theory can guide and enhance practical algorithms, using Low-Rank Adaptation (LoRA) ([Hu et al., 2022](https://arxiv.org/abs/2106.09685)) in large language models as a case study. We rigorously prove that, under gradient descent, LoRA adapters align with specific singular subspaces of the one-step full fine-tuning gradient. This result suggests that, by properly initializing the adapters using the one-step full gradient, subspace alignment can be achieved immediately—applicable to both linear and nonlinear models. Building on our theory, we propose a theory-driven algorithm, LoRA-One, where the linear convergence (as well as generalization) is built and incorporating preconditioners theoretically helps mitigate the effects of ill-conditioning. Besides, our theory reveals connections between LoRA-One and other gradient-alignment-based methods, helping to clarify misconceptions in the design of such algorithms. LoRA-One achieves significant empirical improvements over LoRA and its variants across benchmarks in natural language understanding, mathematical reasoning, and code generation.
 <h1 align="center"> 
-    <img src="./img/math_long_run-1.png" width="650">
+    <img src="./img/math_long_run-1.png" width="600">
 </h1>
 
 ---
