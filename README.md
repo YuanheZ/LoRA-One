@@ -32,8 +32,6 @@ init:
   max_length: 1024 # input max lenght using for computing full-batch gradient, recomment to be consistent with max_length in model
   scale: stable
   stable_gamma: 128 # gamma parameter in the init
-  do_subsampling: false # set true to enable using a sub-batch data to initialize
-  sub_size: 100000 # specify the size if using sub-batch data
 ```
 
 To use LoRA-One **without** pre-conditioners, please use the following slurm command
