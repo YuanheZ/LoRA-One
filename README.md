@@ -32,6 +32,9 @@ init:
   max_length: 1024 # input max lenght using for computing full-batch gradient, recomment to be consistent with max_length in model
   scale: stable
   stable_gamma: 128 # gamma parameter in the init
+  # the gradient batch size is bsz x iters
+  bsz: 1 # sub-batch size per iteration for full gradient compute
+  iters: 8 # total number of iterations for full gradient compute
 ```
 
 To use LoRA-One **without** pre-conditioners, please use the following slurm command
